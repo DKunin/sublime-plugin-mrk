@@ -21,13 +21,15 @@ process.stdin.on('end', function() {
         config = null;
     }
 
-
-    if (!validUrl.isUri(str)){
-        return 0;
-    }
-
-    // process.chdir(process.argv[3]);
-    fetch(`https://wt-7c34bb748e3e4073b3f657c0ae1afac9-0.run.webtask.io/link-to-markdown?url=${str}`).then(result => result.text()).then(result => {
-        process.stdout.write(result)
-    })
+    str.split('\n').forEach(function(singleLine) {
+        if (validUrl.isUri(str)) {
+            fetch(
+                `https://wt-7c34bb748e3e4073b3f657c0ae1afac9-0.run.webtask.io/link-to-markdown?url=${str}`
+            )
+                .then(result => result.text())
+                .then(result => {
+                    process.stdout.write(result);
+                });
+        }
+    });
 });
