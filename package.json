@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "node-fetch": "2.2.0",
+    "open-graph-parser-function": "0.1.0",
     "valid-url": "1.0.9"
   },
   "license": "MIT"

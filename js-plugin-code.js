@@ -2,9 +2,14 @@
 
 const fetch = require('node-fetch');
 const validUrl = require('valid-url');
+const OgParser = require('open-graph-parser-function');
 
 let str = '';
 let config;
+
+function processResult(openGraph, url) {
+  return `- [${openGraph.title}](${url}) ![image](${openGraph.image}) ${openGraph.description}`;
+}
 
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
@@ -21,15 +26,11 @@ process.stdin.on('end', function() {
         config = null;
     }
 
-    str.split('\n').forEach(function(singleLine) {
-        if (validUrl.isUri(str)) {
-            fetch(
-                `https://wt-7c34bb748e3e4073b3f657c0ae1afac9-0.run.webtask.io/link-to-markdown?url=${str}`
-            )
-                .then(result => result.text())
-                .then(result => {
-                    process.stdout.write(result);
-                });
+    str.split('\n').forEach(function(url) {
+        if (validUrl.isUri(url)) {
+            OgParser({ query: { url }}, function(error, data) {
+                process.stdout.write(processResult(data, url) + '\n');
+            });
         }
     });
 });
